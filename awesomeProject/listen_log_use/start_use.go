@@ -27,23 +27,7 @@ func (p *DefaultLogProcessor) Process(logParts format.LogParts) error {
 	// 在这里实现具体的日志处理逻辑
 	// 例如：存储到数据库、写入文件、发送到消息队列等
 	// 解析并格式化日志内容
-	timestamp, _ := logParts["timestamp"]
-	content, _ := logParts["content"]
-	priority, _ := logParts["priority"]
-	version, _ := logParts["version"]
-	appName, _ := logParts["app_name"]
-	hostname, _ := logParts["hostname"]
-
-	fmt.Printf("时间戳: %v", timestamp)
-	fmt.Printf("主机名: %v", hostname)
-	fmt.Printf("应用名: %v", appName)
-	fmt.Printf("优先级: %v", priority)
-	if version != nil {
-		fmt.Printf("版本: %v", version)
-	}
-	fmt.Printf("内容: %v", content)
-	fmt.Println("================")
-	fmt.Println()
+	//fmt.Println("日志内容:")
 	return nil
 }
 
