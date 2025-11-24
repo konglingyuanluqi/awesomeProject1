@@ -70,16 +70,42 @@ func (wp *AntsWorkerPool) AdjustPoolSize() {
 	runtime.GOMAXPROCS(runtime.NumCPU())
 	currentLoad := wp.pool.Running()
 	capacity := wp.pool.Cap()
+	waiting := wp.pool.Waiting()
 
-	if float64(currentLoad)/float64(capacity) > 0.8 {
-		wp.pool.Tune(capacity + runtime.NumCPU())
-	}
-	if float64(currentLoad)/float64(capacity) < 0.2 {
-		newCapacity := capacity - runtime.NumCPU()
-		if newCapacity < runtime.NumCPU() {
-			newCapacity = runtime.NumCPU()
+	// 计算负载率，同时考虑运行中和等待的任务
+	loadRatio := float64(currentLoad+waiting) / float64(capacity)
+
+	// 对于快速大量的小任务，使用更激进的扩容策略
+	if loadRatio > 0.7 { // 降低扩容阈值，更快响应
+		// 根据等待队列长度决定扩容幅度
+		var newCapacity int
+		if waiting > capacity { // 等待队列超过当前容量
+			newCapacity = capacity * 2 // 双倍扩容
+		} else {
+			newCapacity = capacity + capacity/2 // 增加50%
 		}
-		wp.pool.Tune(newCapacity)
+
+		// 限制最大容量，避免无限制增长
+		maxCapacity := runtime.NumCPU() * 10
+		if newCapacity > maxCapacity {
+			newCapacity = maxCapacity
+		}
+
+		if newCapacity > capacity {
+			wp.pool.Tune(newCapacity)
+		}
+	}
+
+	// 缩容策略更加保守，避免频繁缩容导致性能抖动
+	if loadRatio < 0.15 && waiting < 10 { // 只有在负载极低且等待任务很少时才缩容
+		newCapacity := capacity - capacity/4  // 减少25%
+		if newCapacity < runtime.NumCPU()*2 { // 保持最小容量为CPU核心数的2倍
+			newCapacity = runtime.NumCPU() * 2
+		}
+
+		if newCapacity < capacity {
+			wp.pool.Tune(newCapacity)
+		}
 	}
 }
 

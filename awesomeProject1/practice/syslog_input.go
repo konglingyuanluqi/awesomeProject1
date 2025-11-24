@@ -90,7 +90,7 @@ func (s *SyslogInput) SyslogDoCapture(stop *StopFlag) {
 	// 使用配置中的worker数量
 	workerCount := s.syslogConfig.Worker
 	if workerCount <= 0 {
-		workerCount = cpuNum * 10
+		workerCount = cpuNum * 2
 	}
 	bufferSize := workerCount * 5000
 	channel := make(syslog.LogPartsChannel, bufferSize)
@@ -161,7 +161,7 @@ func (s *SyslogInput) SyslogDoCapture(stop *StopFlag) {
 
 	// 启动统计协程
 	go func(pool *AntsWorkerPool) {
-		ticker := time.NewTicker(5 * time.Second)
+		ticker := time.NewTicker(3 * time.Second)
 		defer ticker.Stop()
 
 		var lastCount int64

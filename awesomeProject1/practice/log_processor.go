@@ -34,12 +34,12 @@ func NewDefaultLogProcessor(batchSize int, batchTimeout time.Duration, handler L
 	return &DefaultLogProcessor{
 		batchSize:    batchSize,
 		batchTimeout: batchTimeout,
-		buffer:       make([]format.LogParts, 0, batchSize),
-		bufferPool: sync.Pool{
-			New: func() interface{} {
-				return make([]byte, 0, 1024)
-			},
-		},
+		buffer:       make([]format.LogParts, 0, batchSize*2),
+		//bufferPool: sync.Pool{
+		//	New: func() interface{} {
+		//		return make([]byte, 0, 1024)
+		//	},
+		//},
 		lastFlush: time.Now(),
 		handler:   handler,
 	}
@@ -95,5 +95,4 @@ func (p *DefaultLogProcessor) FlushBuffer() {
 	copy(batch, p.buffer)
 	p.buffer = p.buffer[:0]
 	p.lastFlush = time.Now()
-	// 注意：这里需要外部传入处理函数，或者改为返回批次让外部处理
 }
