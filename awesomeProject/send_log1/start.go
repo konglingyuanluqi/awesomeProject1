@@ -6,8 +6,12 @@ import (
 	"fmt"
 	"log"
 	"log/syslog"
+	"math/rand"
 	"os"
 	"os/signal"
+	"runtime"
+	"sync"
+	"sync/atomic"
 	"syscall"
 	"time"
 )
@@ -15,15 +19,21 @@ import (
 func main() {
 	// 添加命令行参数解析
 	count := flag.Int("count", -1, "要发送的日志条数，-1表示持续发送")
+	qps := flag.Int("qps", 1000, "每秒发送的日志数量")
+	workers := flag.Int("workers", runtime.NumCPU(), "并发发送日志的协程数量")
+	network := flag.String("network", "", "网络协议类型，空表示使用本地syslog，可选tcp/udp")
+	raddr := flag.String("raddr", "localhost:514", "远程syslog服务器地址，格式为host:port")
 	flag.Parse()
 
-	// 连接到本地 Syslog 服务
-	// 参数分别为：日志优先级（Facility|Severity）、标签（Tag）、日志选项
-	logger, err := syslog.New(syslog.LOG_INFO|syslog.LOG_USER, "")
-	// 使用网络连接方式连接到指定端口的syslog服务
-	//network := "udp"
-	//raddr := "localhost:514"
-	//logger, err := syslog.Dial(network, raddr, syslog.LOG_INFO|syslog.LOG_USER, "")
+	var logger *syslog.Writer
+	var err error
+
+	// 根据参数连接到Syslog服务
+	if *network != "" {
+		logger, err = syslog.Dial(*network, *raddr, syslog.LOG_INFO|syslog.LOG_USER, "")
+	} else {
+		logger, err = syslog.New(syslog.LOG_INFO|syslog.LOG_USER, "")
+	}
 
 	if err != nil {
 		log.Fatal("无法连接到 Syslog:", err)
@@ -40,7 +50,7 @@ func main() {
 	signal.Notify(sigChan, syscall.SIGINT, syscall.SIGTERM)
 
 	// 启动日志发送协程
-	go sendLogsPeriodically(ctx, logger, 1*time.Millisecond, *count)
+	go sendLogsConcurrently(ctx, logger, *qps, *workers, *count)
 
 	// 等待信号
 	<-sigChan
@@ -50,8 +60,64 @@ func main() {
 	logger.Info("程序已关闭")
 }
 
-// 定期发送日志的函数
-func sendLogsPeriodically(ctx context.Context, logger *syslog.Writer, interval time.Duration, maxCount int) {
+// 并发发送日志的函数
+func sendLogsConcurrently(ctx context.Context, logger *syslog.Writer, targetQPS, workers, maxCount int) {
+	// 初始化随机数生成器
+	rand.Seed(time.Now().UnixNano())
+
+	// 计算每个worker需要发送的日志数量
+	var perWorkerCount int
+	if maxCount > 0 {
+		perWorkerCount = maxCount / workers
+		if maxCount%workers != 0 {
+			perWorkerCount++
+		}
+	}
+
+	// 创建计数器用于跟踪已发送的日志数量
+	var sentCount int64
+
+	// 创建WaitGroup等待所有worker完成
+	var wg sync.WaitGroup
+	wg.Add(workers)
+
+	// 计算每个worker的发送间隔
+	interval := time.Duration(workers) * time.Second / time.Duration(targetQPS)
+
+	// 启动worker协程
+	for i := 0; i < workers; i++ {
+		go func(id int) {
+			defer wg.Done()
+			workerSendLogs(ctx, logger, id, interval, perWorkerCount, &sentCount)
+		}(i)
+	}
+
+	// 启动统计协程
+	go func() {
+		ticker := time.NewTicker(1 * time.Second)
+		defer ticker.Stop()
+
+		var lastCount int64
+		for {
+			select {
+			case <-ctx.Done():
+				return
+			case <-ticker.C:
+				currentCount := atomic.LoadInt64(&sentCount)
+				qps := currentCount - lastCount
+				lastCount = currentCount
+				log.Printf("已发送日志: %d, 当前QPS: %d", currentCount, qps)
+			}
+		}
+	}()
+
+	// 等待所有worker完成
+	wg.Wait()
+	log.Printf("所有日志发送完成，总计: %d", atomic.LoadInt64(&sentCount))
+}
+
+// worker发送日志的函数
+func workerSendLogs(ctx context.Context, logger *syslog.Writer, id int, interval time.Duration, maxCount int, totalSent *int64) {
 	ticker := time.NewTicker(interval)
 	defer ticker.Stop()
 
@@ -60,19 +126,19 @@ func sendLogsPeriodically(ctx context.Context, logger *syslog.Writer, interval t
 	// 立即发送一次日志
 	sendRandomLog(logger)
 	sentCount++
+	atomic.AddInt64(totalSent, 1)
 
 	for {
 		select {
 		case <-ctx.Done():
-			logger.Info("停止发送日志")
 			return
 		case <-ticker.C:
 			if maxCount > 0 && sentCount >= maxCount {
-				logger.Info("已达到指定日志条数，停止发送")
 				return
 			}
 			sendRandomLog(logger)
 			sentCount++
+			atomic.AddInt64(totalSent, 1)
 		}
 	}
 }
@@ -102,7 +168,7 @@ func randInt(min, max int) int {
 	if min >= max {
 		return min
 	}
-	return min + int(time.Now().UnixNano()%int64(max-min+1))
+	return min + rand.Intn(max-min+1)
 }
 
 // 生成随机IP地址
