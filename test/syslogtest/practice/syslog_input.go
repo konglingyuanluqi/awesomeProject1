@@ -286,7 +286,7 @@ func (s *SyslogInput) ProcessBatch(logs []format.LogParts) error {
 			if pb != nil {
 				allowCount.WithLabelValues(tag).Add(1)
 				//TODO 加入DNS服务
-				//fmt.Println(pb.String())
+				fmt.Println(pb.String())
 			} else {
 				log.Printf("server_nil: %s %s", tag, content)
 				dropCount.WithLabelValues("server_nil").Add(1)

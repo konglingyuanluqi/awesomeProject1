@@ -1,0 +1,64 @@
+18-May-2016 18:30:59.938 client 127.0.0.1 36031: view default: dns.zdns.cn IN A NOERROR + NS NE NT ND NC H
+18-May-2016 18:30:59.938 client 127.0.0.1 36031: view default: dns.zdns.cn IN A NOERROR + NS NE NT ND NC H
+18-May-2016 18:30:59.938 client 127.0.0.1 36031: view default: dns.zdns.cn IN A NOERROR + NS NE NT ND NC H
+18-May-2016 18:30:59.938 client 127.0.0.1 36031: view default: dns.zdns.cn IN A NOERROR + NS NE NT ND NC H
+18-May-2016 18:30:59.938 client 127.0.0.1 36031: view default: dns.zdns.cn IN A NOERROR + NS NE NT ND NC H
+18-May-2016 18:30:59.938 client 127.0.0.1 36031: view default: dns.zdns.cn IN A NOERROR + NS NE NT ND NC H
+18-May-2016 18:30:59.938 client 127.0.0.1 36031: view default: dns.zdns.cn IN A NOERROR + NS NE NT ND NC H
+18-May-20ult: dns.zdns.cn IN A NOERROR + NS NE NT ND NC H
+RROR + NS NE NT ND NC H
+18-May-2016 18:30:59.938: view default: dns.zdns.cn IN A NOERROR + NS NE NT ND NC H
+Aug 29 15:31:40 dnsm02 unbound: [2186527:0] info: 10.225.9.233 wuwuwu.com. A IN
+Aug 29 15:33:55 dnsm02 unbound: [2186695:0] info: 10.225.9.233 ndjdj.net. A IN
+Aug 29 15:35:15 dnsm02 unbound: [2186527:0] info: 10.225.9.233 heihiehie.net. A IN
+Aug 29 15:36:04 dnsm02 unbound: [2186527:0] info: 10.225.9.233 heihiehie.net. A IN
+Aug 29 15:36:15 dnsm02 unbound: [2186527:0] info: 10.225.9.233 1.heihiehie.net. A IN
+Aug 29 15:37:52 dnsm02 unbound: [2186527:0] info: 10.225.9.233 heihiehie.net. A IN
+Aug 29 15:37:53 dnsm02 unbound: [2186695:0] info: 10.225.9.233 heihiehie.net. A IN
+Aug 29 15:37:54 dnsm02 unbound: [2186695:0] info: 10.225.9.233 heihiehie.net. A IN
+Aug 29 15:38:19 dnsm02 unbound: [2186527:0] info: 10.225.9.233 heihiehie.net. A IN
+Aug 29 15:38:21 dnsm02 unbound: [2186527:0] info: 10.225.9.233 heihiehie.net. A IN
+Aug 29 15:38:22 dnsm02 unbound: [2186695:0] info: 10.225.9.233 heihiehie.net. A IN
+Aug 29 16:30:02 dnsm02 unbound: [2186695:0] info: 10.225.9.233 hnjjshdj.cn. A IN
+Aug 29 16:30:05 dnsm02 unbound: [2186695:0] info: 10.225.9.233 hnjjshdj.com. A IN
+Aug 29 16:30:11 dnsm02 unbound: [2186695:0] info: 10.225.9.233 sina.com. A IN
+Aug 29 18:01:24 dnsm02 unbound: [2186695:0] info: 10.225.9.233 good.com. A IN
+Ailog{"rawEvent":"2024/10/21 19:00:35 10F4 PACKET  0000020D71A0D4A0 UDP Rcv 192.168.0.245   16d5   Q [0001   D   NOERROR] A      (11)FSSCPRDAPP1(0)"}
+Ailog{"rawEvent":"2024/10/21 19:00:35 10DC PACKET  0000020D76941560 UDP Rcv 172.20.194.120  2d5b   Q [0001   D   NOERROR] A      (15)nf-esb-dev-kesb(0)"}
+Ailog{"rawEvent":"2024/10/21 19:00:35 1100 PACKET  0000020D5E01F130 UDP Rcv 192.168.0.246   7432   Q [0001   D   NOERROR] A      (11)FSSCPRDAPP2(0)"}
+Ailog{"rawEvent":"2024/10/21 19:00:35 10E8 PACKET  0000020D65BB4340 UDP Rcv 172.20.28.163   4621   Q [0001   D   NOERROR] SRV    (6)_https(4)_tcp(5)ucems(7)tongwei(3)com(0)"}
+Ailog{"rawEvent":"2024/10/21 19:00:35 10E8 PACKET  0000020D5B154080 UDP Snd 172.20.194.78   43dc R Q [8281   DR SERVFAIL] AAAA   (20)master-172-20-194-78(0)"}
+Ailog{"rawEvent":"2024/10/21 19:00:38 10F4 PACKET  0000020D790C3550 UDP Rcv 192.168.0.246   74e0   Q [0001   D   NOERROR] A      (11)FSSCPRDAPP2(0)"}
+Ailog{"rawEvent":"2024/10/21 19:00:35 10FC PACKET  0000020D6E8F03E0 UDP Rcv 192.170.65.34   3af6   Q [0001   D   NOERROR] A      (18)conn-service-cn-04(10)allawntech(3)com(0)"}
+Ailog{"rawEvent":"2024/10/21 19:00:36 10FC PACKET  0000020D791BFDC0 UDP Rcv 192.168.9.160   18c8   Q [0001   D   NOERROR] A      (12)pull-tsl-f26(9)douyincdn(3)com(0)"}
+Ailog{"rawEvent":"2024/10/21 19:00:36 10F0 PACKET  0000020D6C686C80 UDP Snd 172.20.194.120  65c6 R Q [8281   DR SERVFAIL] A      (15)nf-esb-dev-kesb(0)"}
+Ailog{"rawEvent":"2024/10/21 19:00:36 10F4 PACKET  0000020D06CCBFF0 UDP Rcv 192.168.9.160   5f31   Q [0001   D   NOERROR] A      (16)pull-tsl-spe-l11(12)douyinliving(3)com(0)"}
+Ailog{"rawEvent":"2024/10/21 19:00:36 1104 PACKET  0000020D6DA28560 UDP Rcv 192.168.100.53  e793   Q [0001   D   NOERROR] A      (12)pull-flv-q11(9)douyincdn(3)com(0)"}
+Ailog{"rawEvent":"2024/10/21 19:00:36 10F4 PACKET  0000020D6D6685B0 UDP Rcv 192.168.9.160   000c   Q [0001   D   NOERROR] A      (15)pull-tsl-spe-l1(12)douyinliving(3)com(0)"}
+Ailog{"rawEvent":"2024/10/21 19:00:36 10F0 PACKET  0000020D6F84A760 UDP Snd 192.170.78.41   a795 R Q [8281   DR SERVFAIL] A      (18)3132372e302e302e31(0)"}
+Ailog{"rawEvent":"2024/10/21 19:00:36 1104 PACKET  0000020D5D6A0180 UDP Snd 192.168.9.160   30cf R Q [8081   DR  NOERROR] A      (11)pull-l3-cny(9)douyincdn(3)com(0)"}
+Ailog{"rawEvent":"2024/10/21 19:00:36 10F0 PACKET  0000020D03196F30 UDP Snd 172.20.194.120  69f4 R Q [8281   DR SERVFAIL] A      (15)nf-esb-dev-kesb(0)"}
+Ailog{"rawEvent":"2024/10/21 19:00:36 10DC PACKET  0000020D5918D910 UDP Snd 192.168.0.246   aa68 R Q [8281   DR SERVFAIL] AAAA   (11)FSSCPRDAPP2(0)"}
+Ailog{"rawEvent":"2024/10/21 19:00:36 1104 PACKET  0000020D691C6AF0 UDP Snd 192.168.113.112 f223 R Q [8081   DR  NOERROR] A      (22)pull-tsl-l3-encryption(9)douyincdn(3)com(0)"}
+Ailog{"rawEvent":"2024/10/21 19:00:35 10DC PACKET  0000020D6E8F03E0 UDP Snd 172.20.194.120  2211 R Q [8281   DR SERVFAIL] A      (15)nf-esb-dev-kesb(0)"}
+Ailog{"rawEvent":"2024/10/21 19:00:35 10F4 PACKET  0000020D013157D0 UDP Snd 192.170.65.34   3afb R Q [8081   DR  NOERROR] A      (3)www(10)googleapis(2)cn(0)"}
+Ailog{"rawEvent":"2024/10/21 19:00:35 10FC PACKET  0000020D5F0EED00 UDP Rcv 172.20.194.120  7fec   Q [0001   D   NOERROR] A      (15)nf-esb-dev-kesb(0)"}
+Ailog{"rawEvent":"2024/10/21 19:00:35 10FC PACKET  0000020D66F60BE0 UDP Snd 192.170.65.34   3afe R Q [8081   DR  NOERROR] A      (4)prod(6)client(4)wosc(8)services(9)microsoft(3)com(0)"}
+Ailog{"rawEvent":"2024/10/21 19:00:35 10EC PACKET  0000020D66F60BE0 UDP Snd 192.168.159.121 ab4f R Q [8081   DR  NOERROR] A      (2)pw(6)mediav(3)com(0)"}
+Ailog{"rawEvent":"2024/10/21 19:00:35 10F0 PACKET  0000020D6E8F03E0 UDP Rcv 192.168.0.245   6cf8   Q [0001   D   NOERROR] A      (11)FSSCPRDAPP1(0)"}
+Ailog{"rawEvent":"2024/10/21 19:00:35 10F4 PACKET  0000020D618B6170 UDP Snd 192.168.0.182   2f09   Q [0001   D   NOERROR] A      (12)push-rtmp-l1(9)douyincdn(3)com(0)"}
+Ailog{"rawEvent":"2024/10/21 19:00:36 10FC PACKET  0000020D797A20D0 UDP Snd 172.20.194.120  a895 R Q [8281   DR SERVFAIL] A      (15)nf-esb-dev-kesb(0)"}
+Ailog{"rawEvent":"2024/10/21 19:00:36 10F4 PACKET  0000020D797A20D0 UDP Snd 172.20.193.79   b0e9 R Q [8281   DR SERVFAIL] A      (26)nf-zngc-prod-k8s-worknode3(0)"}
+Ailog{"rawEvent":"2024/10/21 19:00:36 10F4 PACKET  0000020D597D0D10 UDP Snd 192.168.100.53  84db R Q [8081   DR  NOERROR] A      (14)pull-lls-hs-f5(5)flive(9)douyincdn(3)com(0)"}
+Ailog{"rawEvent":"2024/10/21 19:00:36 10DC PACKET  0000020D794B8430 UDP Rcv 192.170.85.233  326b   Q [0001   D   NOERROR] A      (32)plkvdb8nmvlgms5bka7n3b7wmdffa2zf(9)yundunwaf(3)com(0)"}
+Ailog{"rawEvent":"2024/10/21 19:00:36 10E8 PACKET  0000020D597D0D10 UDP Snd 192.170.85.233  915a R Q [8081   DR  NOERROR] A      (3)rd6(7)zhaopin(3)com(0)"}
+Ailog{"rawEvent":"2024/10/21 19:00:36 10EC PACKET  0000020D6F6CAC90 UDP Rcv 172.20.194.120  e649   Q [0001   D   NOERROR] A      (15)nf-esb-dev-kesb(0)"}
+Ailog{"rawEvent":"2024/10/21 19:00:36 10FC PACKET  0000020D65BA3AE0 UDP Snd 192.168.0.182   2c3e   Q [0001   D   NOERROR] 65     (3)rd6(7)zhaopin(3)com(0)"}
+Ailog{"rawEvent":"2024/10/21 19:00:36 10F4 PACKET  0000020D5D6A0180 UDP Rcv 192.168.21.158  4293   Q [0001   D   NOERROR] A      (2)pw(6)mediav(3)com(0)"}
+Ailog{"rawEvent":"2024/10/21 19:00:36 10E8 PACKET  0000020D597D0D10 UDP Snd 172.20.194.120  2dd8 R Q [8281   DR SERVFAIL] A      (15)nf-esb-dev-kesb(0)"}
+Ailog{"rawEvent":"2024/10/21 19:00:37 10F4 PACKET  0000020D6AF43990 UDP Snd 172.20.196.188  ca86 R Q [8085 A DR  NOERROR] AAAA   (3)git(7)tongwei(3)com(0)"}
+Ailog{"rawEvent":"2024/10/21 19:00:37 10E8 PACKET  0000020D6227C950 UDP Rcv 192.168.0.246   c3e0   Q [0001   D   NOERROR] A      (11)FSSCPRDAPP2(0)"}
+Ailog{"rawEvent":"2024/10/21 19:00:37 10FC PACKET  0000020D5D6AB1C0 UDP Rcv 192.168.0.245   573f   Q [0001   D   NOERROR] A      (11)FSSCPRDAPP1(0)"}
+Ailog{"rawEvent":"2024/10/21 19:00:35 10FC PACKET  0000020D69AD2CC0 UDP Rcv 192.168.0.182   9c2f R Q [8281   DR SERVFAIL] A      (11)liveupdate5(2)f5(6)lenovo(3)com(2)cn(0)"}
+Ailog{"rawEvent":"2024/10/21 19:00:35 10FC PACKET  0000020D0D336500 UDP Snd 192.168.0.246   4326 R Q [8281   DR SERVFAIL] AAAA   (11)FSSCPRDAPP2(0)"}
+Ailog{"rawEvent":"2024/10/21 19:00:35 1100 PACKET  0000020D6E8F03E0 UDP Rcv 192.168.113.112 bd7e   Q [0001   D   NOERROR] A      (25)pull-tsl-hs-f5-encryption(5)flive(9)douyincdn(3)com(0)"} 

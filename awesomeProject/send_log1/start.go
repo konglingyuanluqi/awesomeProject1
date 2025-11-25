@@ -63,7 +63,7 @@ func main() {
 // 并发发送日志的函数
 func sendLogsConcurrently(ctx context.Context, logger *syslog.Writer, targetQPS, workers, maxCount int) {
 	// 初始化随机数生成器
-	rand.Seed(time.Now().UnixNano())
+	//rand.Seed(time.Now().UnixNano())
 
 	// 计算每个worker需要发送的日志数量
 	var perWorkerCount int

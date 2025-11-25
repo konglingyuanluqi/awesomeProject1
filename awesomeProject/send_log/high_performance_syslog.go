@@ -150,12 +150,16 @@ func randomIP() string {
 		randInt(1, 254))
 }
 
+const (
+	INFO = "12-Sep-2025 17:03:56.635 queries: client @0x7f22f404b620 223.2.43.8#23253 (api.miwifi.com): view ext2: query: api.miwifi.com IN AAAA + (202.119.104.31)"
+)
+
 func main() {
 	// 设置GOMAXPROCS为CPU核心数
 	runtime.GOMAXPROCS(runtime.NumCPU())
 
 	// 创建syslog发送器
-	sender, err := NewSyslogSender("udp", "localhost:1514", syslog.LOG_LOCAL0, "high_perf_test")
+	sender, err := NewSyslogSender("udp", "localhost:1515", syslog.LOG_LOCAL0, "high_perf_test")
 	if err != nil {
 		fmt.Printf("创建syslog发送器失败: %v", err)
 		os.Exit(1)
@@ -211,7 +215,7 @@ func main() {
 				//	return
 				//}
 
-				fmt.Printf("总发送: %d, 当前QPS: %d", totalSent, qps)
+				fmt.Printf("总发送: %d, 当前QPS: %d \n", totalSent, qps)
 			}
 		}
 	}()
@@ -225,7 +229,7 @@ func main() {
 					return
 				default:
 					// 高频发送日志
-					message := generateRandomLogMessage()
+					message := INFO
 					workers[workerID].Send(message)
 
 					// 控制发送速率，以达到目标QPS
@@ -236,7 +240,7 @@ func main() {
 		}(i)
 	}
 
-	fmt.Printf("高性能syslog发送器已启动，使用 %d 个工作协程", workerCount)
+	fmt.Printf("高性能syslog发送器已启动，使用 %d 个工作协程 \n", workerCount)
 	fmt.Println("按Ctrl+C停止发送")
 
 	// 等待信号
@@ -244,5 +248,5 @@ func main() {
 	fmt.Println("收到关闭信号，正在优雅关闭...")
 	cancel()
 	time.Sleep(1 * time.Second)
-	fmt.Printf("程序已关闭，共发送了 %d 条日志", totalSent)
+	fmt.Printf("程序已关闭，共发送了 %d 条日志 \n", totalSent)
 }
