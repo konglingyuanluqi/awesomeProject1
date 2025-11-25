@@ -16,24 +16,24 @@ import (
 	"time"
 )
 
+const (
+	INFO = "12-Sep-2025 17:03:56.635 queries: client @0x7f22f404b620 223.2.43.8#23253 (api.miwifi.com): view ext2: query: api.miwifi.com IN AAAA + (202.119.104.31)"
+)
+
 func main() {
 	// 添加命令行参数解析
 	count := flag.Int("count", -1, "要发送的日志条数，-1表示持续发送")
 	qps := flag.Int("qps", 1000, "每秒发送的日志数量")
 	workers := flag.Int("workers", runtime.NumCPU(), "并发发送日志的协程数量")
-	network := flag.String("network", "", "网络协议类型，空表示使用本地syslog，可选tcp/udp")
-	raddr := flag.String("raddr", "localhost:514", "远程syslog服务器地址，格式为host:port")
+	raddr := flag.String("raddr", "localhost:1515", "远程syslog服务器地址，格式为host:port")
 	flag.Parse()
 
 	var logger *syslog.Writer
 	var err error
 
 	// 根据参数连接到Syslog服务
-	if *network != "" {
-		logger, err = syslog.Dial(*network, *raddr, syslog.LOG_INFO|syslog.LOG_USER, "")
-	} else {
-		logger, err = syslog.New(syslog.LOG_INFO|syslog.LOG_USER, "")
-	}
+	network := "udp"
+	logger, err = syslog.Dial(network, *raddr, syslog.LOG_INFO|syslog.LOG_USER, "")
 
 	if err != nil {
 		log.Fatal("无法连接到 Syslog:", err)
@@ -124,7 +124,8 @@ func workerSendLogs(ctx context.Context, logger *syslog.Writer, id int, interval
 	sentCount := 0
 
 	// 立即发送一次日志
-	sendRandomLog(logger)
+	//sendRandomLog(logger)
+	sendFixedLog(logger, INFO)
 	sentCount++
 	atomic.AddInt64(totalSent, 1)
 
@@ -136,7 +137,8 @@ func workerSendLogs(ctx context.Context, logger *syslog.Writer, id int, interval
 			if maxCount > 0 && sentCount >= maxCount {
 				return
 			}
-			sendRandomLog(logger)
+			//sendRandomLog(logger)
+			sendFixedLog(logger, INFO)
 			sentCount++
 			atomic.AddInt64(totalSent, 1)
 		}
@@ -178,4 +180,14 @@ func randomIP() string {
 		randInt(0, 255),
 		randInt(0, 255),
 		randInt(1, 254))
+}
+
+// 发送固定内容的日志
+func sendFixedLog(logger *syslog.Writer, content string) {
+
+	// 根据指定级别发送日志
+	err := logger.Info(content)
+	if err != nil {
+		log.Fatal("无法发送日志:", err)
+	}
 }

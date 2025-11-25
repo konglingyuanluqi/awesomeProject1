@@ -1,4 +1,4 @@
-package main
+package practice
 
 import (
 	"fmt"
@@ -14,6 +14,8 @@ import (
 	"sync"
 	"sync/atomic"
 	"syscall"
+	"syslogtest/dns360protocol"
+	syslogParse "syslogtest/syslog_parse"
 	"time"
 )
 
@@ -57,7 +59,7 @@ func contains(arr []string, str string) bool {
 }
 
 // SyslogDoCapture 开始捕获syslog消息
-func (s *SyslogInput) SyslogDoCapture(stop *StopFlag) {
+func (s *SyslogInput) SyslogDoCapture() {
 	defer func() {
 		if r := recover(); r != nil {
 			log.Printf("Recovered in f: %v", r)
@@ -66,11 +68,6 @@ func (s *SyslogInput) SyslogDoCapture(stop *StopFlag) {
 
 	// 设置信号监听，用于优雅关闭程序
 	sigChan := make(chan os.Signal, 1)
-
-	if stop.flag == true {
-		signal.Notify(sigChan, syscall.SIGINT, syscall.SIGTERM)
-		return
-	}
 
 	s.CustomRegexp = []*regexp.Regexp{}
 
@@ -169,7 +166,7 @@ func (s *SyslogInput) SyslogDoCapture(stop *StopFlag) {
 				currentCount := pool.GetTotalCount()
 				increment := currentCount - lastCount
 				metrics := pool.GetMetrics()
-				log.Printf("已处理总日志数: %d, 最近5秒处理: %d, 错误数: %d, %s \n",
+				log.Printf("已处理总日志数: %d, 最近3秒处理: %d, 错误数: %d, %s \n",
 					currentCount, increment, metrics.ErrorCount, pool.Status())
 				lastCount = currentCount
 			}
@@ -234,16 +231,84 @@ func (s *SyslogInput) HandleBatch(logs []format.LogParts) error {
 }
 
 // ProcessBatch 处理批次日志
-func (s *SyslogInput) ProcessBatch(logs []format.LogParts) error {
-	for _, logp := range logs {
-		tag := logp["tag"].(string)
-		//content := logp["content"].(string)
+//func (s *SyslogInput) ProcessBatch(logs []format.LogParts) error {
+//	for _, logp := range logs {
+//		tag := logp["tag"].(string)
+//		content := logp["content"].(string)
+//
+//		//if strings.Contains(tag, "360sdns") == false &&
+//		//	strings.Contains(tag, "360dns") == false { //避免循环写爆本地日志
+//		//	log.Println("|tag=" + tag + "|content=" + content)
+//		//}
+//		log.Println("tag=" + tag + "|content=" + content)
+//		// TODO 处理单条日志
+//	}
+//	return nil
+//}
 
+// 处理log队列
+func (s *SyslogInput) ProcessBatch(logs []format.LogParts) error {
+	parse := syslogParse.New()
+
+	if len(s.syslogConfig.TimeLayout) > 0 {
+		loc := "Asia/Shanghai"
+		if len(s.syslogConfig.TimeLocation) > 0 {
+			loc = s.syslogConfig.TimeLocation
+		}
+		err := parse.SetTimeLayOut(s.syslogConfig.TimeLayout, loc)
+		if err != nil {
+			log.Println(err)
+		}
+	}
+
+	for _, logParts := range logs {
+		var err error
+		var pb *dns360protocol.DnsMessage
+		matchFlag := false
+		tag := logParts["tag"].(string)
+		content := logParts["content"].(string)
+		//client := logParts["client"].(string)
 		if strings.Contains(tag, "360sdns") == false &&
 			strings.Contains(tag, "360dns") == false { //避免循环写爆本地日志
-			//log.Println("|tag=" + tag + "|content=" + content)
+			//TODO 循环写
+			//log.Printf("|tag= %s |content= %s", tag, content)
 		}
-		// TODO 处理单条日志
+
+		for _, exp := range s.CustomRegexp {
+			pb, err = parse.ParseRegexp(exp, content)
+			if err == nil {
+				matchFlag = true
+				break
+			}
+		}
+
+		if matchFlag {
+			if pb != nil {
+				allowCount.WithLabelValues(tag).Add(1)
+				//TODO 加入DNS服务
+				//fmt.Println(pb.String())
+			} else {
+				log.Printf("server_nil: %s %s", tag, content)
+				dropCount.WithLabelValues("server_nil").Add(1)
+			}
+			//if s.dnsServer.XDNSServerIns != nil && pb != nil {
+			//	allowCount.WithLabelValues(tag).Add(1)
+			//	s.dnsServer.XDNSServerIns.ServeProtobuf(pb)
+			//} else {
+			//	log.Printf("server_nil: %s %s", tag, content)
+			//	dropCount.WithLabelValues("server_nil").Add(1)
+			//}
+		} else {
+			if len(s.CustomRegexp) > 0 {
+				log.Printf("not_match:tag= %s |content=%s", tag, content)
+				dropCount.WithLabelValues("not_match").Add(1)
+			} else {
+				log.Printf("rule_is_empty: %s %s", tag, content)
+				dropCount.WithLabelValues("rule_is_empty").Add(1)
+			}
+		}
 	}
+
 	return nil
+
 }

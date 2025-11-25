@@ -465,6 +465,10 @@ func TestRegexp10(t *testing.T) {
 
 	parse := syslog_prase.New()
 	pb, err := parse.ParseRegexp(re, str)
+	//fmt.Println(re)
+	//fmt.Println(str)
+	//(?P<datetime>.*?) queries: client .+ (?P<client_ip>.*?)#(?P<client_port>[0-9]*?) \((?P<query_name>.*?)\): view .+ query: .+ IN (?P<query_type>.*?) .+ \((?P<server_ip>.*?)\)
+	//12-Sep-2025 17:03:56.635 queries: client @0x7f22f404b620 223.2.43.8#23253 (api.miwifi.com): view ext2: query: api.miwifi.com IN AAAA + (202.119.104.31)
 	if err != nil {
 		fmt.Println(err.Error())
 	} else {
