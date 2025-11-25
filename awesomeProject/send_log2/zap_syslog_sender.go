@@ -131,7 +131,8 @@ type TokenBucket struct {
 func NewTokenBucket(capacity, rate int64) *TokenBucket {
 	return &TokenBucket{
 		capacity: capacity,
-		tokens:   capacity,
+		// 初始令牌数设置为速率的1/10，避免初始QPS过高
+		tokens:   rate / 10,
 		rate:     rate,
 		lastTime: time.Now(),
 	}

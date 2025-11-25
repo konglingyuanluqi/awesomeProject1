@@ -34,16 +34,17 @@ type AntsWorkerPool struct {
 func NewAntsWorkerPool(workers int, processor LogProcessor) (*AntsWorkerPool, error) {
 	ctx, cancel := context.WithCancel(context.Background())
 
-	if workers > 2000 {
-		workers = 2000 // 设置上限
+	if workers > runtime.NumCPU()*500 {
+		workers = runtime.NumCPU() * 500 // 设置上限
 	}
 
 	pool, err := ants.NewPool(
 		workers,
 		//ants.WithPreAlloc(true),
 		ants.WithExpiryDuration(30*time.Second), // 空闲协程30秒后回收
-		ants.WithMaxBlockingTasks(10000),        // 队列最多等待10000个任务
-		ants.WithNonblocking(false),             // 保持阻塞模式，避免任务丢失
+		//TODO 协程池阻塞队列大小
+		ants.WithMaxBlockingTasks(50000), // 队列最多等待10000个任务
+		ants.WithNonblocking(false),      // 保持阻塞模式，避免任务丢失
 		ants.WithPanicHandler(func(i interface{}) {
 			// 使用更高效的日志记录
 			log.Printf("worker panic: %v\n%s", i, debug.Stack())
@@ -94,8 +95,9 @@ func (wp *AntsWorkerPool) AdjustPoolSize() {
 			newCapacity = capacity + capacity/2 // 增加50%
 		}
 
+		// TODO 协程池maxCapacity
 		// 限制最大容量，避免无限制增长
-		maxCapacity := runtime.NumCPU() * 500
+		maxCapacity := runtime.NumCPU() * 600
 		if newCapacity > maxCapacity {
 			newCapacity = maxCapacity
 		}

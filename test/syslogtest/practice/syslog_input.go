@@ -84,9 +84,10 @@ func (s *SyslogInput) SyslogDoCapture() {
 	server := syslog.NewServer()
 	server.SetFormat(syslog.RFC3164)
 
-	// TODO 使用配置中的worker数量
 	workerCount := s.syslogConfig.Worker
-	bufferSize := workerCount * 10
+
+	//TODO syslog Chan管道Buffer大小
+	bufferSize := 50000
 	channel := make(syslog.LogPartsChannel, bufferSize)
 	handler := syslog.NewChannelHandler(channel)
 	server.SetHandler(handler)
@@ -286,7 +287,7 @@ func (s *SyslogInput) ProcessBatch(logs []format.LogParts) error {
 			if pb != nil {
 				allowCount.WithLabelValues(tag).Add(1)
 				//TODO 加入DNS服务
-				fmt.Println(pb.String())
+				//fmt.Println(pb.String())
 			} else {
 				log.Printf("server_nil: %s %s", tag, content)
 				dropCount.WithLabelValues("server_nil").Add(1)
